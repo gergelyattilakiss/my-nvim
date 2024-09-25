@@ -9,7 +9,9 @@ return {
   -- import/override with your plugins folder
   { import = "astrocommunity.colorscheme.aurora" },
   { import = "astrocommunity.colorscheme.catppuccin" },
+  { import = "astrocommunity.colorscheme.kanagawa-paper-nvim" },
   { import = "astrocommunity.pack.python" },
   { import = "astrocommunity.pack.nix" },
   { import = "astrocommunity.recipes.neovide" },
+  { import = "astrocommunity.completion.copilot-lua-cmp" },
 }

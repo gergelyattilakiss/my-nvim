@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- You can also add or configure plugins by creating files in this `plugins/` folder
 -- Here are some examples:
 
@@ -81,5 +79,11 @@ return {
         Rule("a", "a", "-vim")
       )
     end,
+  },
+  {
+    "sho-87/kanagawa-paper.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
   },
 }
