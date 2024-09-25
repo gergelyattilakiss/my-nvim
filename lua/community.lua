@@ -8,6 +8,8 @@ return {
   { import = "astrocommunity.pack.lua" },
   -- import/override with your plugins folder
   { import = "astrocommunity.colorscheme.aurora" },
+  { import = "astrocommunity.colorscheme.catppuccin" },
   { import = "astrocommunity.pack.python" },
-  { import = "astrocommunity.pack.nix"},
-} 
+  { import = "astrocommunity.pack.nix" },
+  { import = "astrocommunity.recipes.neovide" },
+}
