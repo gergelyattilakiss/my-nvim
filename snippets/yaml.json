@@ -1,0 +1,17 @@
+{
+	"restud-report": {
+		"prefix": ["restud","report"],
+		"body": [
+			"author: ",
+			"salutation: ",
+			"email: ",
+			"title: ",
+			"praise:",
+			"requests:",
+			"    -",
+			"recommendations:",
+			"    -",
+		],
+		"description": "Restud report"
+	},
+}
