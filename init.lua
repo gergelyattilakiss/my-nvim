@@ -50,6 +50,9 @@ require("lazy").setup({
       vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers)
     end
   },
+  { "nvim-lua/plenary.nvim" },
+  { "github/copilot.vim" },
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
   
   -- Add a colorscheme
   {
