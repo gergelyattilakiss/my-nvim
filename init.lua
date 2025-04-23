@@ -53,8 +53,8 @@ require("lazy").setup({
   { "nvim-lua/plenary.nvim" },
   { "github/copilot.vim" },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-  
-  -- Add a colorscheme
+
+    -- Add a colorscheme
   {
     "folke/tokyonight.nvim",
     lazy = false,
@@ -64,3 +64,43 @@ require("lazy").setup({
     end,
   },
 })
+ 
+
+  require('nvim-treesitter.configs').setup {
+  -- A list of parser names, or "all" (parsers with maintainers)
+  ensure_installed = { "lua", "vim", "vimdoc", "python", "javascript", "typescript", "c", "rust", "r", "julia", "markdown", "fish", "bash", "yaml", "toml", "json",}, 
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- Automatically install missing parsers when entering buffer
+  auto_install = true,
+
+  highlight = {
+    -- Enable syntax highlighting
+    enable = true,
+    
+    -- Disable treesitter highlight for large files
+    disable = function(lang, buf)
+      local max_filesize = 100 * 1024 -- 100 KB
+      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      if ok and stats and stats.size > max_filesize then
+        return true
+      end
+    end,
+  },
+
+  -- Enable indentation based on treesitter
+  indent = { enable = true },
+  
+  -- Enable incremental selection based on the named nodes from the grammar
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+}
