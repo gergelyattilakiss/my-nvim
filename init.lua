@@ -53,6 +53,35 @@ require("lazy").setup({
   { "nvim-lua/plenary.nvim" },
   { "github/copilot.vim" },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    branch = "main",
+    dependencies = {
+      "github/copilot.vim",
+      "nvim-lua/plenary.nvim",
+    },
+    opts = {
+      -- Optional configuration here
+      show_help = "yes", -- Show help text for CopilotChatInPlace
+      prompts = {
+        Explain = "Explain how this code works, in detail.",
+        Review = "Review this code and suggest improvements.",
+        Tests = "Generate unit tests for this code.",
+        Fix = "What's wrong with this code and how can I fix it?",
+      },
+    },
+    -- Optional custom configuration
+    config = function(_, opts)
+      require("CopilotChat").setup(opts)
+      
+      -- Set up some keymaps
+      vim.keymap.set("n", "<leader>cc", ":CopilotChat ", { desc = "CopilotChat - Ask a question" })
+      vim.keymap.set("v", "<leader>ce", ":CopilotChatExplain<cr>", { desc = "CopilotChat - Explain code" })
+      vim.keymap.set("v", "<leader>ct", ":CopilotChatTests<cr>", { desc = "CopilotChat - Generate tests" })
+      vim.keymap.set("v", "<leader>cr", ":CopilotChatReview<cr>", { desc = "CopilotChat - Review code" })
+    end,
+  },
+
 
     -- Add a colorscheme
   {
@@ -64,7 +93,7 @@ require("lazy").setup({
     end,
   },
 })
- 
+
 
   require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all" (parsers with maintainers)
