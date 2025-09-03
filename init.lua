@@ -71,7 +71,7 @@ require("lazy").setup({
     end,
   },
 })
- 
+
 
   require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all" (parsers with maintainers)
