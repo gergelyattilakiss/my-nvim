@@ -51,9 +51,16 @@ require("lazy").setup({
     end
   },
   { "nvim-lua/plenary.nvim" },
-  { "github/copilot.vim" },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-
+  {
+    "baruchel/vim-notebook",
+    init = function()
+      --Keymaps
+      vim.keymap.set('n', '<F5>', '<cmd>NotebookConvertIPynb<CR>', { noremap = true, silent = true })
+      vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {pattern = '*.ipynb',command = 'set filetype=vim-notebook'})
+      vim.keymap.set('n', '<leader>s', '<cmd>NotebookSave<CR>', { noremap = true, silent = true })
+      end
+  },   
     -- Add a colorscheme
   {
     "folke/tokyonight.nvim",
