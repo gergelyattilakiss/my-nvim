@@ -51,35 +51,29 @@ require("lazy").setup({
     end
   },
   { "nvim-lua/plenary.nvim" },
-  { "github/copilot.vim" },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-  {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    branch = "main",
+  { 
+    "NickvanDyke/opencode.nvim",
     dependencies = {
-      "github/copilot.vim",
-      "nvim-lua/plenary.nvim",
+      -- Recommended for better prompt input, and required to use `opencode.nvim`'s embedded terminal — otherwise optional
+      { 'folke/snacks.nvim', opts = { input = { enabled = true } } },
     },
-    opts = {
-      -- Optional configuration here
-      show_help = "yes", -- Show help text for CopilotChatInPlace
-      prompts = {
-        Explain = "Explain how this code works, in detail.",
-        Review = "Review this code and suggest improvements.",
-        Tests = "Generate unit tests for this code.",
-        Fix = "What's wrong with this code and how can I fix it?",
-      },
-    },
-    -- Optional custom configuration
-    config = function(_, opts)
-      require("CopilotChat").setup(opts)
-      
-      -- Set up some keymaps
-      vim.keymap.set("n", "<leader>cc", ":CopilotChat ", { desc = "CopilotChat - Ask a question" })
-      vim.keymap.set("v", "<leader>ce", ":CopilotChatExplain<cr>", { desc = "CopilotChat - Explain code" })
-      vim.keymap.set("v", "<leader>ct", ":CopilotChatTests<cr>", { desc = "CopilotChat - Generate tests" })
-      vim.keymap.set("v", "<leader>cr", ":CopilotChatReview<cr>", { desc = "CopilotChat - Review code" })
-    end,
+    config = function()
+    -- Required for `opts.auto_reload`
+    vim.opt.autoread = true
+    -- Recommended keymaps
+    vim.keymap.set('n', '<leader>ot', function() require('opencode').toggle() end, { desc = 'Toggle opencode' })
+    vim.keymap.set('n', '<leader>oA', function() require('opencode').ask() end, { desc = 'Ask opencode' })
+    vim.keymap.set('n', '<leader>oa', function() require('opencode').ask('@cursor: ') end, { desc = 'Ask opencode about this' })
+    vim.keymap.set('v', '<leader>oa', function() require('opencode').ask('@selection: ') end, { desc = 'Ask opencode about selection' })
+    vim.keymap.set('n', '<leader>on', function() require('opencode').command('session_new') end, { desc = 'New opencode session' })
+    vim.keymap.set('n', '<leader>oy', function() require('opencode').command('messages_copy') end, { desc = 'Copy last opencode response' })
+    vim.keymap.set('n', '<S-C-u>',    function() require('opencode').command('messages_half_page_up') end, { desc = 'Messages half page up' })
+    vim.keymap.set('n', '<S-C-d>',    function() require('opencode').command('messages_half_page_down') end, { desc = 'Messages half page down' })
+    vim.keymap.set({ 'n', 'v' }, '<leader>os', function() require('opencode').select() end, { desc = 'Select opencode prompt' })
+    -- Example: keymap for custom prompt
+    vim.keymap.set('n', '<leader>oe', function() require('opencode').prompt('Explain @cursor and its context') end, { desc = 'Explain this code' })
+  end
   },
   {
     'lewis6991/gitsigns.nvim',
@@ -101,7 +95,7 @@ require("lazy").setup({
   },
 
 
-    -- Add a colorscheme
+  -- Add a colorscheme
   {
     "folke/tokyonight.nvim",
     lazy = false,
