@@ -1,0 +1,23 @@
+# Lazy.nvim
+lazy-lock.json
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Undo history
+undodir/
+
+# Backup files
+*.backup
+*.bak
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# LSP logs
+lsp.log
