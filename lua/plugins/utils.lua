@@ -55,7 +55,7 @@ return {
     config = function()
       local wk = require("which-key")
       wk.setup()
-      
+
       -- Register key groups
       wk.add({
         { "<leader>f", group = "Find" },
@@ -63,7 +63,7 @@ return {
         { "<leader>s", group = "Split" },
         { "<leader>h", group = "Git Hunk" },
         { "<leader>g", group = "Git" },
-        { "<leader>a", group = "AI" },
+        { "<leader><leader>", group = "AI Assistant" },
         { "<leader>c", group = "Code" },
         { "<leader>d", group = "Diagnostics" },
         { "<leader>r", group = "Rename/Restart" },

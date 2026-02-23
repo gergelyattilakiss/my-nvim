@@ -3,11 +3,12 @@ return {
   event = { "BufReadPre", "BufNewFile" },
   dependencies = {
     "hrsh7th/cmp-nvim-lsp",
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
     { "antosha417/nvim-lsp-file-operations", config = true },
     { "folke/neodev.nvim", opts = {} },
   },
   config = function()
-    local lspconfig = require("lspconfig")
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
     local keymap = vim.keymap.set
 
@@ -86,7 +87,7 @@ return {
     })
 
     -- Python
-    lspconfig["pyright"].setup({
+    vim.lsp.config["pyright"] = {
       capabilities = capabilities,
       settings = {
         python = {
@@ -98,15 +99,17 @@ return {
           },
         },
       },
-    })
+    }
+    vim.lsp.enable("pyright")
 
     -- Julia
-    lspconfig["julials"].setup({
+    vim.lsp.config["julials"] = {
       capabilities = capabilities,
-    })
+    }
+    vim.lsp.enable("julials")
 
     -- Rust
-    lspconfig["rust_analyzer"].setup({
+    vim.lsp.config["rust_analyzer"] = {
       capabilities = capabilities,
       settings = {
         ["rust-analyzer"] = {
@@ -118,15 +121,17 @@ return {
           },
         },
       },
-    })
+    }
+    vim.lsp.enable("rust-analyzer")
 
     -- SQL (sqls)
-    lspconfig["sqls"].setup({
+    vim.lsp.config["sqls"] = {
       capabilities = capabilities,
-    })
+    }
+    vim.lsp.enable("sqls")
 
     -- Lua
-    lspconfig["lua_ls"].setup({
+    vim.lsp.config["lua_ls"] = {
       capabilities = capabilities,
       settings = {
         Lua = {
@@ -141,21 +146,25 @@ return {
           },
         },
       },
-    })
+    }
+    vim.lsp.enable("sqls")
 
     -- Bash
-    lspconfig["bashls"].setup({
+    vim.lsp.config["bashls"] = {
       capabilities = capabilities,
-    })
+    }
+    vim.lsp.enable("bashls")
 
     -- YAML
-    lspconfig["yamlls"].setup({
+    vim.lsp.config["yamlls"] = {
       capabilities = capabilities,
-    })
+    }
+    vim.lsp.enable("yamlls")
 
     -- JSON
-    lspconfig["jsonls"].setup({
+    vim.lsp.config["jsonls"] = {
       capabilities = capabilities,
-    })
+    }
+    vim.lsp.enable("jsonls")
   end,
 }
