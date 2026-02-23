@@ -70,9 +70,29 @@ return {
     end
 
     -- Configure diagnostic display
+    local severity_labels = {
+      [vim.diagnostic.severity.ERROR] = "Error",
+      [vim.diagnostic.severity.WARN] = "Warn",
+      [vim.diagnostic.severity.INFO] = "Info",
+      [vim.diagnostic.severity.HINT] = "Hint",
+    }
+    local severity_icons = {
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.WARN] = " ",
+      [vim.diagnostic.severity.INFO] = " ",
+      [vim.diagnostic.severity.HINT] = "󰠠 ",
+    }
+
     vim.diagnostic.config({
       virtual_text = {
-        prefix = "●",
+        prefix = function(diagnostic)
+          return severity_icons[diagnostic.severity] or "●"
+        end,
+        format = function(diagnostic)
+          local label = severity_labels[diagnostic.severity] or "?"
+          local source = diagnostic.source and ("(" .. diagnostic.source .. ")") or ""
+          return string.format("%s%s: %s", label, source, diagnostic.message)
+        end,
       },
       signs = true,
       update_in_insert = false,
@@ -147,7 +167,7 @@ return {
         },
       },
     }
-    vim.lsp.enable("sqls")
+    vim.lsp.enable("lua_ls")
 
     -- Bash
     vim.lsp.config["bashls"] = {
