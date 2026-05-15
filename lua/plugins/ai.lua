@@ -1,202 +1,64 @@
 return {
-  "olimorris/codecompanion.nvim",
-  keys = {
-    { "<leader><leader>c", mode = { "n", "v" } },
-    { "<leader><leader>a", mode = { "n", "v" } },
-    { "<leader><leader>e", mode = { "n", "v" } },
-    { "<leader><leader>f", mode = { "n", "v" } },
-  },
-  cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
+  "yetone/avante.nvim",
+  build = vim.fn.has("win32") ~= 0
+      and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+      or "make",
+  event = "VeryLazy",
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "nvim-treesitter/nvim-treesitter",
-    "hrsh7th/nvim-cmp",
+    "MunifTanjim/nui.nvim",
+    "nvim-mini/mini.pick",
     "nvim-telescope/telescope.nvim",
-    "github/copilot.vim",
+    "hrsh7th/nvim-cmp",
+    "ibhagwan/fzf-lua",
+    "stevearc/dressing.nvim",
+    "folke/snacks.nvim",
+    "nvim-tree/nvim-web-devicons",
+    "zbirenbaum/copilot.lua",
     {
-      "stevearc/dressing.nvim",
-      opts = {},
+      "HakonHarnes/img-clip.nvim",
+      event = "VeryLazy",
+      opts = {
+        default = {
+          embed_image_as_base64 = false,
+          prompt_for_file_name = false,
+          drag_and_drop = { insert_mode = true },
+          use_absolute_path = true,
+        },
+      },
+    },
+    {
+      "MeanderingProgrammer/render-markdown.nvim",
+      opts = {
+        file_types = { "markdown", "Avante" },
+      },
+      ft = { "markdown", "Avante" },
     },
   },
-  config = function()
-    require("codecompanion").setup({
-      adapters = {
-        anthropic = function()
-          return require("codecompanion.adapters").extend("anthropic", {
-            env = {
-              api_key = "ANTHROPIC_API_KEY",
-            },
-            schema = {
-              model = {
-                default = "claude-sonnet-4-20250514",
-              },
-            },
-          })
-        end,
-        openai = function()
-          return require("codecompanion.adapters").extend("openai", {
-            env = {
-              api_key = "OPENAI_API_KEY",
-            },
-            schema = {
-              model = {
-                default = "gpt-4o",
-              },
-            },
-          })
-        end,
-        ollama = function()
-          return require("codecompanion.adapters").extend("ollama", {
-            schema = {
-              model = {
-                default = "codellama:latest",
-              },
-            },
-          })
-        end,
-      },
-      strategies = {
-        chat = {
-          adapter = "copilot", -- Using GitHub Copilot. Change to "anthropic", "openai", or "ollama"
-        },
-        inline = {
-          adapter = "copilot",
-        },
-        agent = {
-          adapter = "copilot",
+  opts = {
+    instructions_file = "avante.md",
+    provider = "openrouter",
+    providers = {
+      openrouter = {
+        __inherited_from = "openai",
+        endpoint = "https://openrouter.ai/api/v1",
+        api_key_name = "OPENROUTER_API_KEY",
+        model = "deepseek/deepseek-v4-flash:free",
+        timeout = 30000,
+        extra_request_body = {
+          temperature = 0.75,
+          max_tokens = 20480,
         },
       },
-      prompt_library = {
-        ["explain"] = {
-          strategy = "chat",
-          description = "Explain how the selected code works",
-          prompts = {
-            {
-              role = "system",
-              content = "You are an expert programmer. Explain code clearly and concisely.",
-            },
-            {
-              role = "user",
-              content = function(context)
-                local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-                return string.format(
-                  "Please explain how this %s code works:\n\n```%s\n%s\n```",
-                  context.filetype,
-                  context.filetype,
-                  code
-                )
-              end,
-            },
-          },
-        },
-        ["fix"] = {
-          strategy = "chat",
-          description = "Fix issues in the selected code",
-          prompts = {
-            {
-              role = "system",
-              content = "You are an expert programmer. Fix bugs and issues in code.",
-            },
-            {
-              role = "user",
-              content = function(context)
-                local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-                return string.format(
-                  "Please review this %s code and fix any issues:\n\n```%s\n%s\n```",
-                  context.filetype,
-                  context.filetype,
-                  code
-                )
-              end,
-            },
-          },
-        },
-        ["optimize"] = {
-          strategy = "chat",
-          description = "Optimize the selected code",
-          prompts = {
-            {
-              role = "system",
-              content = "You are an expert programmer. Optimize code for performance and readability.",
-            },
-            {
-              role = "user",
-              content = function(context)
-                local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-                return string.format(
-                  "Please optimize this %s code:\n\n```%s\n%s\n```",
-                  context.filetype,
-                  context.filetype,
-                  code
-                )
-              end,
-            },
-          },
-        },
-        ["docstring"] = {
-          strategy = "inline",
-          description = "Add documentation to the code",
-          prompts = {
-            {
-              role = "system",
-              content = "You are an expert at writing clear, concise documentation.",
-            },
-            {
-              role = "user",
-              content = function(context)
-                local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-                return string.format(
-                  "Add appropriate documentation/docstring to this %s code:\n\n```%s\n%s\n```\n\nReturn ONLY the code with added documentation, no explanations.",
-                  context.filetype,
-                  context.filetype,
-                  code
-                )
-              end,
-            },
-          },
-        },
-      },
-      display = {
-        chat = {
-          window = {
-            layout = "vertical", -- float|vertical|horizontal|buffer
-            width = 0.45,
-            height = 0.8,
-            relative = "editor",
-            border = "rounded",
-          },
-          intro_message = "Welcome! I'm here to help with your code.",
-        },
-      },
-    })
+    },
+  },
+  config = function(_, opts)
+    local avante = require("avante")
+    avante.setup(opts)
 
-    -- Keymaps - Using double-space (easy on any keyboard layout)
     local keymap = vim.keymap.set
-
-    -- Main AI commands (Space Space + letter)
-    keymap({ "n", "v" }, "<leader><leader>c", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "AI: Toggle Chat" })
-    keymap({ "n", "v" }, "<leader><leader>a", "<cmd>CodeCompanionActions<cr>", { desc = "AI: Actions Menu" })
-    keymap("v", "<leader><leader>v", "<cmd>CodeCompanionChat Add<cr>", { desc = "AI: Add selection to chat" })
-    -- Quick prompts - work in both normal and visual mode
-    -- In normal mode: uses current line or function under cursor
-    -- In visual mode: uses selected text
-    keymap({ "n", "v" }, "<leader><leader>e", function()
-      require("codecompanion").prompt("explain")
-    end, { desc = "AI: Explain code" })
-
-    keymap({ "n", "v" }, "<leader><leader>f", function()
-      require("codecompanion").prompt("fix")
-    end, { desc = "AI: Fix code" })
-
-    keymap({ "n", "v" }, "<leader><leader>o", function()
-      require("codecompanion").prompt("optimize")
-    end, { desc = "AI: Optimize code" })
-
-    keymap({ "n", "v" }, "<leader><leader>d", function()
-      require("codecompanion").prompt("docstring")
-    end, { desc = "AI: Add documentation" })
-
-    -- Expand 'cc' into 'CodeCompanion' in the command line
-    vim.cmd([[cab cc CodeCompanion]])
+    keymap("n", "<leader><leader>a", "<cmd>AvanteAsk<cr>", { desc = "Avante ask" })
+    keymap("n", "<leader><leader>t", "<cmd>AvanteToggle<cr>", { desc = "Avante toggle" })
+    keymap("n", "<leader><leader>r", "<cmd>AvanteRefresh<cr>", { desc = "Avante refresh" })
   end,
 }

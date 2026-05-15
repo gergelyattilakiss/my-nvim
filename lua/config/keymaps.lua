@@ -57,3 +57,8 @@ keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
 keymap("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 keymap("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
 keymap("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostic list" })
+
+-- Code Companion
+keymap("n", "<leader>cc", "<cmd>CodeCompanion<CR>", { desc = "CodeCompanion Chat" })
+keymap("n", "<leader>ca", "<cmd>CodeCompanion agent<CR>", { desc = "CodeCompanion Agent Mode" })
+keymap("v", "<leader>ca", "<cmd>CodeCompanion chat add<CR>", { desc = "Add Selection to Chat" })

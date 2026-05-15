@@ -111,4 +111,5 @@ return {
       shell = vim.o.shell,
     },
   },
+  { "nvim-lua/plenary.nvim", lazy = true },
 }
