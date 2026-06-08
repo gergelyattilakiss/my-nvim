@@ -43,7 +43,7 @@ return {
         __inherited_from = "openai",
         endpoint = "https://openrouter.ai/api/v1",
         api_key_name = "OPENROUTER_API_KEY",
-        model = "deepseek/deepseek-v4-flash:free",
+        model = "deepseek/deepseek-v4-flash",
         timeout = 30000,
         extra_request_body = {
           temperature = 0.75,
